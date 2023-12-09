@@ -3,11 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 require("express-async-errors");
-/* const io = require("socket.io")(4080, {
+const io = require("socket.io")(4080, {
   cors: {
     origin: "http://localhost:5173",
   },
-}); */
+});
 
 const mysqlPool = require("./database/config");
 
