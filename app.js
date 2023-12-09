@@ -25,11 +25,14 @@ const messagesRoutes = require("./controllers/messages.controller");
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+app.get('/home', (req, res) => {
+  res.send('Home !')
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-/* 
+
 app.use("/api/users", usersRoutes);
 app.use("/api/conversations", conversationsRoutes);
 app.use("/api/messages", messagesRoutes);
@@ -99,4 +102,3 @@ mysqlPool
   })
   .catch((error) => console.error("DB connection failed :", error));
 
- */
