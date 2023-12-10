@@ -27,6 +27,7 @@ app.use("/api/conversations", conversationsRoutes);
 app.use("/api/messages", messagesRoutes);
 
 app.get('/home', (req, res) => {
+  console.log("C'est le test API")
   res.send('This is a test response!');
 });
 
