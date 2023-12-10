@@ -5,7 +5,10 @@ const app = express();
 require("express-async-errors");
 const io = require("socket.io")(4080, {
   cors: {
-    origin: "http://16.16.211.19/",
+    origin: "http://16.16.211.19",
+    methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: ["Content-Type"],
   },
 });
 
