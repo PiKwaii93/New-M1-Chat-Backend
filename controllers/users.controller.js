@@ -60,11 +60,11 @@ router.post("/sign-up", async (req, res) => {
 
     res.status(201).send({ success: "Votre compte à été créer avec succès" });
   } catch (error) {
-    if (error.message.includes("users.email_UNIQUE")) {
+    if (error.message.includes("email_UNIQUE")) {
       error.message = "Cette adress email est déjà liée à un compte";
     }
 
-    if (error.message.includes("users.full_name_UNIQUE")) {
+    if (error.message.includes("full_name_UNIQUE")) {
       error.message = "Ce nom est déjà utilisé";
     }
 
@@ -107,11 +107,11 @@ router.put("/:id", async (req, res) => {
 
     res.status(200).send({ success: "User updated successfully" });
   } catch (error) {
-    if (error.message.includes("users.email_UNIQUE")) {
+    if (error.message.includes("email_UNIQUE")) {
       error.message = "Cette adress email est déjà liée à un compte";
     }
 
-    if (error.message.includes("users.full_name_UNIQUE")) {
+    if (error.message.includes("full_name_UNIQUE")) {
       error.message = "Ce nom est déjà utilisé";
     }
 

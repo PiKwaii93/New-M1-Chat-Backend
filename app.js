@@ -29,11 +29,6 @@ app.use("/api/users", usersRoutes);
 app.use("/api/conversations", conversationsRoutes);
 app.use("/api/messages", messagesRoutes);
 
-app.get('/home', (req, res) => {
-  console.log("C'est le test API")
-  res.send('This is a test response!');
-});
-
 app.use((err, req, res, next) => {
   console.error(err);
   res
@@ -44,58 +39,53 @@ app.use((err, req, res, next) => {
 // Run socket.io
 let users = [];
 io.on("connection", (socket) => {
-  try {
-    socket.on("addUser", async (userId) => {
-      const isUserExist = users.find((user) => user.userId === userId);
-      if (!isUserExist) {
-        const user = { userId, socketId: socket.id };
-        users.push(user);
-        io.emit("getUsers", users);
-      }
-    });
-
-    socket.on("disconnect", () => {
-      users = users.filter((user) => user.socketId !== socket.id);
+  socket.on("addUser", async (userId) => {
+    const isUserExist = users.find((user) => user.userId === userId);
+    if (!isUserExist) {
+      const user = { userId, socketId: socket.id };
+      users.push(user);
       io.emit("getUsers", users);
-      io.emit("disconnectUser");
-    });
+    }
+  });
+  socket.on("disconnect", () => {
+    users = users.filter((user) => user.socketId !== socket.id);
+    io.emit("getUsers", users);
+    io.emit("disconnectUser");
+  });
 
-    socket.on("userDeleted", () => {
-      users = users.filter((user) => user.socketId !== socket.id);
-      io.emit("getUsersWhenOneDeleted", users);
-    });
+  socket.on("userDeleted", () => {
+    users = users.filter((user) => user.socketId !== socket.id);
+    io.emit("getUsersWhenOneDeleted", users);
+  });
 
-    socket.on("userCreatedOrUpdate", () => {
-      io.emit("getUsersWhenOneCreatedOrUpdate");
-    });
+  socket.on("userCreatedOrUpdate", () => {
+    io.emit("getUsersWhenOneCreatedOrUpdate");
+  });
 
-    socket.on(
-      "sendMessage",
-      ({ id, sender_id, receiver_id, content, updated_at, conversation_id }) => {
-        const receiver = users.find((user) => user.userId === receiver_id);
+  socket.on(
+    "sendMessage",
+    ({ id, sender_id, receiver_id, content, updated_at, conversation_id }) => {
+      const receiver = users.find((user) => user.userId === receiver_id);
 
-        if (receiver) {
-          io.to(receiver.socketId).to(socket.id).emit("getMessage", {
-            id,
-            sender_id,
-            updated_at,
-            content,
-            conversation_id,
-          });
-        } else {
-          io.to(socket.id).emit("getMessage", {
-            conversation_id,
-            id,
-            sender_id,
-            updated_at,
-            content,
-          });
-        }
+      if (receiver) {
+        io.to(receiver.socketId).to(socket.id).emit("getMessage", {
+          id,
+          sender_id,
+          updated_at,
+          content,
+          conversation_id,
+        });
+      } else {
+        io.to(socket.id).emit("getMessage", {
+          conversation_id,
+          id,
+          sender_id,
+          updated_at,
+          content,
+        });
       }
-    );
-  } catch (error) {
-    console.error('Socket.IO connection error:', error.message);
-  }
+    }
+  );
 });
 
 // Database services
@@ -103,9 +93,8 @@ const serviceUser = require("./services/users.service");
 
 // Connect DB
 mysqlPool
-  .query("DESCRIBE Messages")
-  .then(results => {
-    console.log("Query executed successfully:", results);
+  .query("SELECT 1")
+  .then(() => {
     console.log("DB connected");
     // Run server
     app.listen(port, async () => {
@@ -113,8 +102,3 @@ mysqlPool
     });
   })
   .catch((error) => console.error("DB connection failed :", error));
-
-// Handle unhandled promise rejections globally
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-});
