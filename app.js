@@ -5,7 +5,7 @@ const app = express();
 require("express-async-errors");
 const io = require("socket.io")(4080, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://16.16.211.19/",
   },
 });
 
@@ -22,18 +22,7 @@ const usersRoutes = require("./controllers/users.controller");
 const conversationsRoutes = require("./controllers/conversations.controller");
 const messagesRoutes = require("./controllers/messages.controller");
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-app.get('/home', (req, res) => {
-  res.send('Home !')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-
-/* app.use("/api/users", usersRoutes);
+app.use("/api/users", usersRoutes);
 app.use("/api/conversations", conversationsRoutes);
 app.use("/api/messages", messagesRoutes);
 
@@ -58,6 +47,16 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit("getUsers", users);
+    io.emit("disconnectUser");
+  });
+
+  socket.on("userDeleted", () => {
+    users = users.filter((user) => user.socketId !== socket.id);
+    io.emit("getUsersWhenOneDeleted", users);
+  });
+
+  socket.on("userCreatedOrUpdate", () => {
+    io.emit("getUsersWhenOneCreatedOrUpdate");
   });
 
   socket.on(
@@ -84,7 +83,6 @@ io.on("connection", (socket) => {
       }
     }
   );
-  // io.emit("getUsers", socket.userId);
 });
 
 // Database services
@@ -92,8 +90,8 @@ const serviceUser = require("./services/users.service");
 
 // Connect DB
 mysqlPool
-  .query("SELECT 1")
-  .then(() => {
+  .query("DESCRIBE Messages")
+  .then(results => {
     console.log("DB connected");
     // Run server
     app.listen(port, async () => {
@@ -101,5 +99,3 @@ mysqlPool
     });
   })
   .catch((error) => console.error("DB connection failed :", error));
-
- */

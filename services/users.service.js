@@ -1,4 +1,5 @@
 const mysqlPool = require("../database/config");
+const bcrypt = require("bcrypt");
 
 module.exports.getUsers = async () => {
   const [results] = await mysqlPool.query("SELECT * FROM Users");

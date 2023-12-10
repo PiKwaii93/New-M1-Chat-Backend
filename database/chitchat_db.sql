@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `chitchat_api` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `chitchat_api`;
+CREATE DATABASE  IF NOT EXISTS `test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `test`;
 -- MySQL dump 10.13  Distrib 8.0.33, for macos13 (arm64)
 --
 -- Host: 127.0.0.1    Database: chitchat_api
@@ -34,9 +34,9 @@ CREATE TABLE `Conversations` (
   UNIQUE KEY `idConversations_UNIQUE` (`id`),
   KEY `user_id_1_idx` (`user_id_1`),
   KEY `user_id_2_idx` (`user_id_2`),
-  CONSTRAINT `user_id_1` FOREIGN KEY (`user_id_1`) REFERENCES `Users` (`id`),
-  CONSTRAINT `user_id_2` FOREIGN KEY (`user_id_2`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `user_id_1` FOREIGN KEY (`user_id_1`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_id_2` FOREIGN KEY (`user_id_2`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,9 +66,9 @@ CREATE TABLE `Messages` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `sender_id_idx` (`sender_id`),
   KEY `conversation_id_idx` (`conversation_id`),
-  CONSTRAINT `conversation_id` FOREIGN KEY (`conversation_id`) REFERENCES `Conversations` (`id`),
-  CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `conversation_id` FOREIGN KEY (`conversation_id`) REFERENCES `Conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `Users` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `full_name_UNIQUE` (`full_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-09 11:07:26
+-- Dump completed on 2023-12-10 17:58:46
