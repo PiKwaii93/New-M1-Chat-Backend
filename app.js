@@ -92,6 +92,7 @@ const serviceUser = require("./services/users.service");
 mysqlPool
   .query("DESCRIBE Messages")
   .then(results => {
+    console.log("Query executed successfully:", results);
     console.log("DB connected");
     // Run server
     app.listen(port, async () => {
