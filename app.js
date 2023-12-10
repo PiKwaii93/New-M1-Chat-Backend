@@ -26,6 +26,10 @@ app.use("/api/users", usersRoutes);
 app.use("/api/conversations", conversationsRoutes);
 app.use("/api/messages", messagesRoutes);
 
+app.get('/home', (req, res) => {
+  res.send('This is a test response!');
+});
+
 app.use((err, req, res, next) => {
   console.error(err);
   res
