@@ -40,6 +40,12 @@ app.use((err, req, res, next) => {
 // Run socket.io
 let users = [];
 io.on("connection", (socket) => {
+  // Add an event handler for the connection error
+  socket.on("error", (error) => {
+    console.error(`Socket.IO connection error: ${error.message}`);
+  });
+
+  // Continue with your existing code
   socket.on("addUser", async (userId) => {
     const isUserExist = users.find((user) => user.userId === userId);
     if (!isUserExist) {
@@ -48,6 +54,7 @@ io.on("connection", (socket) => {
       io.emit("getUsers", users);
     }
   });
+
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit("getUsers", users);
@@ -88,6 +95,7 @@ io.on("connection", (socket) => {
     }
   );
 });
+
 
 // Database services
 const serviceUser = require("./services/users.service");
